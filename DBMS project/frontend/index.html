@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Library Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="title-wrap">
+          <h1>
+            <span class="logo-dot"></span>
+            Library Dashboard
+          </h1>
+          <p class="subtitle">Manage books, members & loans in one place.</p>
+        </div>
+
+        <div class="header-controls">
+          <div class="theme-picker">
+            <label for="accentColor">Accent</label>
+            <input type="color" id="accentColor" />
+          </div>
+
+          <button id="randomThemeBtn" class="btn btn-outline">
+            🎨 Random Theme
+          </button>
+
+          <button id="modeToggleBtn" class="btn btn-accent">
+            🌙 Dark Mode
+          </button>
+        </div>
+      </header>
+
+      <!-- NAV TABS -->
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-target="booksSection">📚 Books</button>
+        <button class="tab-btn" data-target="membersSection">👥 Members</button>
+        <button class="tab-btn" data-target="loansSection">🔁 Loans</button>
+      </nav>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-grid">
+        <!-- BOOKS -->
+        <section id="booksSection" class="panel active">
+          <div class="panel-header">
+            <div>
+              <h2>Books</h2>
+              <p class="panel-subtitle">
+                View, add and update books in the library.
+              </p>
+            </div>
+            <button id="refreshBooksBtn" class="btn btn-soft">
+              ⟳ Refresh
+            </button>
+          </div>
+
+          <div class="panel-body split">
+            <!-- BOOK FORM -->
+            <div class="card card-form">
+              <h3>Add / Update Book</h3>
+              <form id="bookForm">
+                <!-- ⚠️ Make sure these names match schemas.BookCreate / BookUpdate -->
+                <div class="field">
+                  <label>Title</label>
+                  <input type="text" name="title" required />
+                </div>
+                <div class="field">
+                  <label>Author</label>
+                  <input type="text" name="author" required />
+                </div>
+                <div class="field">
+                  <label>ISBN</label>
+                  <input type="text" name="isbn" />
+                </div>
+                <div class="field">
+                  <label>Published Year</label>
+                  <input type="number" name="published_year" min="0" />
+                </div>
+                <div class="field">
+                  <label>Copies</label>
+                  <input type="number" name="copies" min="1" value="1" />
+                </div>
+
+                <input type="hidden" id="editBookId" />
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-accent">
+                    💾 Save Book
+                  </button>
+                  <button type="button" id="cancelEditBook" class="btn btn-ghost">
+                    ✖ Cancel
+                  </button>
+                </div>
+                <p id="bookFormMsg" class="form-msg"></p>
+              </form>
+            </div>
+
+            <!-- BOOK TABLE -->
+            <div class="card card-table">
+              <div class="card-header-row">
+                <h3>Books List</h3>
+                <span id="booksCount" class="badge">0 books</span>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Title</th>
+                      <th>Author</th>
+                      <th>Year</th>
+                      <th>Copies</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="booksTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MEMBERS -->
+        <section id="membersSection" class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Members</h2>
+              <p class="panel-subtitle">
+                Register new members and view existing ones.
+              </p>
+            </div>
+            <button id="refreshMembersBtn" class="btn btn-soft">
+              ⟳ Refresh
+            </button>
+          </div>
+
+          <div class="panel-body split">
+            <!-- MEMBER FORM -->
+            <div class="card card-form">
+              <h3>Add Member</h3>
+              <form id="memberForm">
+                <!-- ⚠️ Match with MemberCreate -->
+                <div class="field">
+                  <label>Full Name</label>
+                  <input type="text" name="full_name" required />
+                </div>
+                <div class="field">
+                  <label>Email</label>
+                  <input type="email" name="email" required />
+                </div>
+                <div class="field">
+                  <label>Phone</label>
+                  <input type="text" name="phone" />
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-accent">
+                    ➕ Add Member
+                  </button>
+                </div>
+                <p id="memberFormMsg" class="form-msg"></p>
+              </form>
+            </div>
+
+            <!-- MEMBER TABLE -->
+            <div class="card card-table">
+              <div class="card-header-row">
+                <h3>Members List</h3>
+                <span id="membersCount" class="badge">0 members</span>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody id="membersTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LOANS -->
+        <section id="loansSection" class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Loans</h2>
+              <p class="panel-subtitle">
+                Issue books and track active returns.
+              </p>
+            </div>
+            <button id="refreshLoansBtn" class="btn btn-soft">
+              ⟳ Refresh
+            </button>
+          </div>
+
+          <div class="panel-body split">
+            <!-- LOAN FORM -->
+            <div class="card card-form">
+              <h3>Create Loan</h3>
+              <form id="loanForm">
+                <!-- ⚠️ Match with LoanCreate: adjust if needed -->
+                <div class="field">
+                  <label>Book ID</label>
+                  <input type="number" name="book_id" min="1" required />
+                </div>
+                <div class="field">
+                  <label>Member ID</label>
+                  <input type="number" name="member_id" min="1" required />
+                </div>
+                <div class="field">
+                  <label>Due Date</label>
+                  <input type="date" name="due_date" required />
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-accent">
+                    📤 Issue Book
+                  </button>
+                </div>
+                <p id="loanFormMsg" class="form-msg"></p>
+              </form>
+            </div>
+
+            <!-- LOANS TABLE -->
+            <div class="card card-table">
+              <div class="card-header-row">
+                <h3>Loans List</h3>
+                <span id="loansCount" class="badge">0 loans</span>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Book</th>
+                      <th>Member</th>
+                      <th>Issued</th>
+                      <th>Due</th>
+                      <th>Returned</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="loansTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- TOAST -->
+      <div id="toast" class="toast hidden"></div>
+    </div>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
